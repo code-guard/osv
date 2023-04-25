@@ -31,6 +31,8 @@ func (client *OsvHttpClient) OsvHttpClient(httpClient http.Client) {
 }
 
 func (client *OsvHttpClient) Do(request *http.Request) (*http.Response, error) {
+	request.Header.Set("Content-Type", "application/json")
+
 	resp, err := client.client.Do(request)
 
 	if err != nil {

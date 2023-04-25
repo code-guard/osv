@@ -3,76 +3,68 @@ package osv
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
+	osvHttp "osv/http"
 )
 
 // Given a vulnerability query returns the vulnerabilities associated with the query
-func QueryVulns(queryVuln *VulnQuery) (*VulnsResponse, error) {
-
-	jsonData, err := json.Marshal(&queryVuln)
+func QueryVulnerabilities(client *osvHttp.OsvHttpClient, query *VulnerabilityQuery) (*VulnerabilityResponses, error) {
+	jsonData, err := json.Marshal(&query)
 	if err != nil {
-		return nil, fmt.Errorf("cannot marshall the VulnQuery struct")
+		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", "https://api.osv.dev/v1/query", bytes.NewBuffer(jsonData))
+	request, err := http.NewRequest("POST", "https://api.osv.dev/v1/query", bytes.NewBuffer(jsonData))
 	if err != nil {
-		return nil, fmt.Errorf("failed to generate the HTTP request for %s, version %s", queryVuln.PckInfo.Name, queryVuln.Version)
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to query the dependency vulnerabilities for %s, version %s", queryVuln.PckInfo.Name, queryVuln.Version)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read OSV response for %s, version %s", queryVuln.PckInfo.Name, queryVuln.Version)
+		return nil, err
 	}
 
-	var vulnResponse VulnsResponse
+	response, err := client.Do(request)
+	if err != nil {
+		return nil, err
+	}
 
-	json.Unmarshal(body, &vulnResponse)
+	defer response.Body.Close()
 
-	return &vulnResponse, nil
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
 
+	var vulnerabilityResponses VulnerabilityResponses
+	json.Unmarshal(body, &vulnerabilityResponses)
+
+	return &vulnerabilityResponses, nil
 }
 
 // Given vulnerability queries returns the vulnerabilities associated with the queries
-func BulkQueryVulns(queriesVuln *VulnsQueries) (*BulkVulnsResponse, error) {
-
-	jsonData, err := json.Marshal(&queriesVuln)
-
+func BulkQueryVulnerabilities(client *osvHttp.OsvHttpClient, vulnerabilityQueries *VulnerabilityQueries) (*BulkVulnerabilityResponses, error) {
+	jsonData, err := json.Marshal(&vulnerabilityQueries)
 	if err != nil {
-		return nil, fmt.Errorf("cannot marshall the VulnQuery struct")
+		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", "https://api.osv.dev/v1/querybatch", bytes.NewBuffer(jsonData))
+	request, err := http.NewRequest("POST", "https://api.osv.dev/v1/querybatch", bytes.NewBuffer(jsonData))
 	if err != nil {
-		return nil, fmt.Errorf("failed to generate the HTTP request for bulk query")
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to query the dependency vulnerabilities for bulk query")
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read OSV response for bulk query")
+		return nil, err
 	}
 
-	var bullVulnResponse BulkVulnsResponse
+	response, err := client.Do(request)
+	if err != nil {
+		return nil, err
+	}
 
-	json.Unmarshal(body, &bullVulnResponse)
+	defer response.Body.Close()
 
-	return &bullVulnResponse, nil
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var bulkVulnerabilityResponses BulkVulnerabilityResponses
+	json.Unmarshal(body, &bulkVulnerabilityResponses)
+
+	return &bulkVulnerabilityResponses, nil
 
 }

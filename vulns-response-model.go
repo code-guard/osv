@@ -2,7 +2,7 @@ package osv
 
 import "time"
 
-type VulnResp struct {
+type VulnerabilityResponse struct {
 	SchemaVersion string    `json:"schemaVersion"`
 	ID            string    `json:"id"`
 	Published     time.Time `json:"published"`
@@ -46,10 +46,10 @@ type VulnResp struct {
 	DatabaseSpecific map[string]interface{} `json:"database_specific"`
 }
 
-type VulnsResponse struct {
-	Vulns []VulnResp `json:"vulns"`
+type VulnerabilityResponses struct {
+	Vulns []VulnerabilityResponse `json:"vulns"`
 }
 
-type BulkVulnsResponse struct {
-	Results []VulnsResponse `json:"results"`
+type BulkVulnerabilityResponses struct {
+	Results []VulnerabilityResponses `json:"results"`
 }

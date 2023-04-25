@@ -9,7 +9,7 @@ import (
 )
 
 // Given a vulnerability OSV ID return the vulnerability details
-func GetVulnerability(client *osvHttp.OsvHttpClient, id string) (*VulnDetails, error) {
+func GetVulnerability(client *osvHttp.OsvHttpClient, id string) (*VulnerabilityDetails, error) {
 	request, err := http.NewRequest("GET", fmt.Sprintf("https://api.osv.dev/v1/vulns/%s", id), nil)
 	if err != nil {
 		return nil, err
@@ -27,8 +27,8 @@ func GetVulnerability(client *osvHttp.OsvHttpClient, id string) (*VulnDetails, e
 		return nil, err
 	}
 
-	var vulnDetailsResponse VulnDetails
-	json.Unmarshal(responseContent, &vulnDetailsResponse)
+	var vulnerabilityDetails VulnerabilityDetails
+	json.Unmarshal(responseContent, &vulnerabilityDetails)
 
-	return &vulnDetailsResponse, nil
+	return &vulnerabilityDetails, nil
 }

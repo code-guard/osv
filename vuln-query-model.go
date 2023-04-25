@@ -1,6 +1,6 @@
 package osv
 
-type VulnQuery struct {
+type VulnerabilityQuery struct {
 	Commit  string      `json:"commit,omitempty"`
 	Version string      `json:"version,omitempty"`
 	PckInfo PackageInfo `json:"package,omitempty"`
@@ -12,6 +12,6 @@ type PackageInfo struct {
 	Purl      string `json:"purl,omitempty"`
 }
 
-type VulnsQueries struct {
-	VulnsQuery []VulnQuery `json:"queries,omitempty"`
+type VulnerabilityQueries struct {
+	Queries []VulnerabilityQuery `json:"queries,omitempty"`
 }

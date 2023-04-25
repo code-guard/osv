@@ -50,7 +50,7 @@ type Severity struct {
 
 type DatabaseSpecific struct{}
 
-type VulnDetails struct {
+type VulnerabilityDetails struct {
 	SchemaVersion    string           `json:"schema_version"`
 	ID               string           `json:"id"`
 	Modified         string           `json:"modified"`
