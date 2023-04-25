@@ -5,29 +5,30 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	osvHttp "osv/http"
 )
 
 // Given a vulnerability OSV ID return the vulnerability details
-func GetVulnDetails(vulnId string) (*VulnDetails, error) {
-
-	urlRequest := fmt.Sprintf("https://api.osv.dev/v1/vulns/%s", vulnId)
-
-	resp, err := http.Get(urlRequest)
+func GetVulnerability(client *osvHttp.OsvHttpClient, id string) (*VulnDetails, error) {
+	request, err := http.NewRequest("GET", fmt.Sprintf("https://api.osv.dev/v1/vulns/%s", id), nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to query the dependency vulnerabilities for vulnerability %s", vulnId)
+		return nil, err
 	}
 
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
+	response, err := client.Do(request)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read OSV response for vulnerability %s", vulnId)
+		return nil, err
+	}
+
+	defer response.Body.Close()
+
+	responseContent, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
 	}
 
 	var vulnDetailsResponse VulnDetails
-
-	json.Unmarshal(body, &vulnDetailsResponse)
+	json.Unmarshal(responseContent, &vulnDetailsResponse)
 
 	return &vulnDetailsResponse, nil
-
 }
