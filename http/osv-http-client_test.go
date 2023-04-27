@@ -74,7 +74,7 @@ func TestOsvClientHttpClientSuccessResponse(t *testing.T) {
 	responseBody := make([]byte, 2)
 	response.Body.Read(responseBody)
 
-	assert.Equal(t, responseBody, []byte("OK"))
+	assert.Equal(t, []byte("OK"), responseBody)
 }
 
 func TestOsvClientOsvErrorResponseWithInvalidFormat(t *testing.T) {
@@ -93,7 +93,7 @@ func TestOsvClientOsvErrorResponseWithInvalidFormat(t *testing.T) {
 	request, _ := http.NewRequest("GET", "https://api.osv.dev", nil)
 	_, error := osvClient.Do(request)
 
-	assert.Equal(t, error.Error(), "an error occurred while reading OSV APIs error response")
+	assert.Equal(t, "an error occurred while reading OSV APIs error response", error.Error())
 }
 
 func TestOsvClientOsvErrorResponse(t *testing.T) {
@@ -114,5 +114,5 @@ func TestOsvClientOsvErrorResponse(t *testing.T) {
 	request, _ := http.NewRequest("GET", "https://api.osv.dev", nil)
 	_, error := osvClient.Do(request)
 
-	assert.Equal(t, error.Error(), fmt.Sprintf("the server replied with code %d: %s", code, message))
+	assert.Equal(t, fmt.Sprintf("the server replied with code %d: %s", code, message), error.Error())
 }
