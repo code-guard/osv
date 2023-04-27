@@ -15,7 +15,7 @@ func main() {
 	osvClient.OsvHttpClient(http.Client{})
 	myVulns, _ := osv.QueryVulnerabilities(&osvClient, &vulnerabilityQuery)
 
-	response, _ := osv.GetVulnerability(&osvClient, myVulns.Vulns[0].ID)
+	response, _ := osv.GetVulnerability(&osvClient, myVulns.Vulns[0].Id)
 	fmt.Println(response)
 
 	q1 := osv.VulnerabilityQuery{PckInfo: osv.PackageInfo{Purl: "pkg:pypi/antlr4-python3-runtime@4.7.2"}}
